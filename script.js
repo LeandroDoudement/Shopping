@@ -2,7 +2,7 @@
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
-
+const classCartItem = '.cart__items';
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -50,15 +50,18 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-const cartItems = document.querySelector('.cart__items');
-const addItemToCart = async (item) => {
-  cartItems.appendChild(item);
+const addtoLocalStorage = () => {
+  const cartItems = document.querySelector(classCartItem);
+  saveCartItems(cartItems.innerHTML);
 };
 
 const onClick = async (id) => {
+  const cartItems = document.querySelector(classCartItem);
   const productData = await fetchItem(id);
   const productInformation = createCartItemElement(productData);
-  await addItemToCart(productInformation);
+  cartItems.appendChild(productInformation);
+
+  addtoLocalStorage();
 };
 
 /**
@@ -92,6 +95,24 @@ const addProducts = async () => {
   });
 };
 
+const refreshCartItens = () => {
+  const cartItems = document.querySelector(classCartItem);
+  const items = getSavedCartItems('cartItems');
+  cartItems.innerHTML = items;
+};
+
+const esvaziarCarrinho = () => {
+  const botaoEsvaziarCarrinho = document.querySelector('.empty-cart');
+  console.log(botaoEsvaziarCarrinho);
+  botaoEsvaziarCarrinho.addEventListener('click', () => {
+    const carrinho = document.querySelector('.cart__items');
+    carrinho.innerHTML = '';
+  });
+};
+
+esvaziarCarrinho();
+
 window.onload = async () => {
   addProducts();
+  refreshCartItens();
 };
