@@ -78,8 +78,7 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(
     createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', () =>
-      onClick(id)
-    )
+      onClick(id)),
   );
 
   return section;
