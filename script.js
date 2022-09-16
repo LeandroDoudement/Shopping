@@ -134,13 +134,12 @@ const createProductItemElement = ({ id, title, thumbnail, price }) => {
     createCustomElement(
       'p',
       'item_price',
-      `Valor: ${(Math.round(price * 100) / 100).toFixed(2)}`
-    )
+      `Valor: ${(Math.round(price * 100) / 100).toFixed(2)}`,
+    ),
   );
   section.appendChild(
     createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', () =>
-      onClick({ id, title, price })
-    )
+      onClick({ id, title, price })),
   );
 
   return section;
