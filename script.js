@@ -1,7 +1,19 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
-
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
+const localStorageGetItem = () => {
+  const item = getSavedCartItems('cartItems');
+  //   if (typeof item === 'string') {
+  //     return item;
+  //   }
+  return JSON.parse(item);
+};
+
+const localStorageSetItem = (items) => {
+  const itemsToSave = typeof items === 'string' ? items : JSON.stringify(items);
+  saveCartItems(itemsToSave);
+};
+
 const classCartItem = '.cart__items';
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -73,30 +85,30 @@ const createCartItemElement = ({ id, title, price }) => {
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
   li.addEventListener('click', () => {
     cartItemClickListener(li);
-    const parsedIds = getSavedCartItems('cartItem');
+    const parsedIds = localStorageGetItem();
     if (!!parsedIds && Array.isArray(parsedIds)) {
-      const index = parsedIds.indexOf(id);
+      const index = parsedIds.findIndex((elem) => elem.id === id);
       parsedIds.splice(index, 1);
-      saveCartItems(parsedIds);
+      localStorageSetItem(parsedIds);
     }
   });
   return li;
 };
 
 const addtoLocalStorage = (id) => {
-  const parsedIds = getSavedCartItems('cartItem');
-  if (!!ids && Array.isArray(parsedIds)) {
+  const parsedIds = localStorageGetItem();
+  if (!!id && Array.isArray(parsedIds)) {
     parsedIds.push(id);
-    saveCartItems(parsedIds);
+    localStorageSetItem(parsedIds);
   } else {
-    saveCartItems([id]);
+    localStorageSetItem([id]);
   }
 };
 
 const onClick = async (id, preventSavingInLocalStorage) => {
   const cartItems = document.querySelector(classCartItem);
-  const productData = await fetchItem(id);
-  const productInformation = createCartItemElement(productData);
+  // const productData = await fetchItem(id);
+  const productInformation = createCartItemElement(id);
   cartItems.appendChild(productInformation);
   if (!preventSavingInLocalStorage) {
     addtoLocalStorage(id);
@@ -111,7 +123,7 @@ const onClick = async (id, preventSavingInLocalStorage) => {
  * @param {string} product.thumbnail - URL da imagem do produto.
  * @returns {Element} Elemento de produto.
  */
-const createProductItemElement = ({ id, title, thumbnail }) => {
+const createProductItemElement = ({ id, title, thumbnail, price }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -119,16 +131,24 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(
+    createCustomElement(
+      'p',
+      'item_price',
+      `Valor: ${(Math.round(price * 100) / 100).toFixed(2)}`
+    )
+  );
+  section.appendChild(
     createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', () =>
-      onClick(id)),
+      onClick({ id, title, price })
+    )
   );
 
   return section;
 };
 
 const addProducts = async () => {
-  const produtos = await fetchProducts('computador');
   loadingItems();
+  const produtos = await fetchProducts('computador');
   produtos.forEach((element) => {
     const items = document.querySelector('.items');
     items.appendChild(createProductItemElement(element));
@@ -137,7 +157,7 @@ const addProducts = async () => {
 };
 
 const LoadCartItens = () => {
-  const ids = getSavedCartItems('cartItem');
+  const ids = localStorageGetItem();
   (ids || []).forEach((element) => {
     onClick(element, true);
   });
@@ -145,7 +165,6 @@ const LoadCartItens = () => {
 
 const esvaziarCarrinho = () => {
   const botaoEsvaziarCarrinho = document.querySelector('.empty-cart');
-  console.log(botaoEsvaziarCarrinho);
   botaoEsvaziarCarrinho.addEventListener('click', () => {
     const carrinho = document.querySelector('.cart__items');
     carrinho.innerHTML = '';

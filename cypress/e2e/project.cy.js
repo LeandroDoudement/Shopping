@@ -1,15 +1,15 @@
-const fetchMock = require('../mocks/fetch')
-const products = require('../mocks/computerCategory')
-const PROJECT_URL = './index.html'
+const fetchMock = require('../mocks/fetch');
+const products = require('../mocks/computerCategory');
+const PROJECT_URL = './index.html';
 
 const LOADING = '.loading';
 const ITEM_SELECTOR = '.item';
-const ADD_CART_BUTTON = '.item__add'
-const CART_ITEMS = '.cart__items'
-const EMPTY_CART_BUTTON = '.empty-cart'
-const TOTAL_PRICE = '.total-price'
+const ADD_CART_BUTTON = '.item__add';
+const CART_ITEMS = '.cart__items';
+const EMPTY_CART_BUTTON = '.empty-cart';
+const TOTAL_PRICE = '.total-price';
 
-let results = products.results
+let results = products.results;
 
 const addToCart = (index) => {
   cy.get(ITEM_SELECTOR)
@@ -17,21 +17,18 @@ const addToCart = (index) => {
     .eq(index)
     .children(ADD_CART_BUTTON)
     .click();
-}
+};
 
 const countCart = (amount) => {
-  cy.get(CART_ITEMS)
-    .children()
-    .should('have.length', amount);
-}
+  cy.get(CART_ITEMS).children().should('have.length', amount);
+};
 
 const checkPrice = (results, indexes) => {
   cy.wait(1000);
   let total = 0;
-  indexes.forEach(index => total += results[index].price);
-  cy.get(TOTAL_PRICE)
-    .should('contain', total.toString());
-}
+  indexes.forEach((index) => (total += results[index].price));
+  cy.get(TOTAL_PRICE).should('contain', total.toString());
+};
 
 describe('Shopping Cart Project', () => {
   beforeEach(() => {
@@ -45,9 +42,11 @@ describe('Shopping Cart Project', () => {
 
   describe('1 - Desenvolva testes para atingir 25% de cobertura total e 100% da função fetchProducts', () => {
     it('Verifica a cobertura de testes unitários', () => {
-      cy.getCoverage().its('total.functions.pct').should('be.gte', 25.00);
-      cy.getCoverage().its('fetchProducts.functions.pct').should('be.gte', 100.00);
-      cy.getCoverage().its('fetchProducts.lines.pct').should('be.gte', 100.00);
+      cy.getCoverage().its('total.functions.pct').should('be.gte', 25.0);
+      cy.getCoverage()
+        .its('fetchProducts.functions.pct')
+        .should('be.gte', 100.0);
+      cy.getCoverage().its('fetchProducts.lines.pct').should('be.gte', 100.0);
     });
   });
 
@@ -61,9 +60,9 @@ describe('Shopping Cart Project', () => {
 
   describe('3 - Desenvolva testes para atingir 50% de cobertura total e 100% da função fetchItem', () => {
     it('Verifica a cobertura de testes unitários', () => {
-      cy.getCoverage().its('total.functions.pct').should('be.gte', 50.00);
-      cy.getCoverage().its('fetchItem.functions.pct').should('be.gte', 100.00);
-      cy.getCoverage().its('fetchItem.lines.pct').should('be.gte', 100.00);
+      cy.getCoverage().its('total.functions.pct').should('be.gte', 50.0);
+      cy.getCoverage().its('fetchItem.functions.pct').should('be.gte', 100.0);
+      cy.getCoverage().its('fetchItem.lines.pct').should('be.gte', 100.0);
     });
   });
 
@@ -75,7 +74,10 @@ describe('Shopping Cart Project', () => {
       cy.get(CART_ITEMS)
         .children()
         .first()
-        .should('have.text', `ID: ${results[36].id} | TITLE: ${results[36].title} | PRICE: $${results[36].price}`)
+        .should(
+          'have.text',
+          `ID: ${results[36].id} | TITLE: ${results[36].title} | PRICE: $${results[36].price}`
+        );
     });
   });
 
@@ -85,39 +87,36 @@ describe('Shopping Cart Project', () => {
       addToCart(31);
       addToCart(15);
 
-      cy.get(CART_ITEMS)
-        .children()
-        .eq(1)
-        .click()
+      cy.get(CART_ITEMS).children().eq(1).click();
       countCart(2);
 
-      cy.get(CART_ITEMS)
-        .children()
-        .eq(1)
-        .click()
+      cy.get(CART_ITEMS).children().eq(1).click();
       countCart(1);
 
-      cy.get(CART_ITEMS)
-        .children()
-        .eq(0)
-        .click()
+      cy.get(CART_ITEMS).children().eq(0).click();
       countCart(0);
     });
   });
 
   describe('6 - Desenvolva testes para atingir 75% de cobertura total e 100% da função saveCartItems', () => {
     it('Verifica a cobertura de testes unitários', () => {
-      cy.getCoverage().its('total.functions.pct').should('be.gte', 75.00);
-      cy.getCoverage().its('saveCartItems.functions.pct').should('be.gte', 100.00);
-      cy.getCoverage().its('saveCartItems.lines.pct').should('be.gte', 100.00);
+      cy.getCoverage().its('total.functions.pct').should('be.gte', 75.0);
+      cy.getCoverage()
+        .its('saveCartItems.functions.pct')
+        .should('be.gte', 100.0);
+      cy.getCoverage().its('saveCartItems.lines.pct').should('be.gte', 100.0);
     });
   });
 
   describe('7 - Desenvolva testes para atingir 100% de cobertura total e 100% da função getSavedCartItems', () => {
     it('Verifica a cobertura de testes unitários', () => {
-      cy.getCoverage().its('total.functions.pct').should('be.gte', 100.00);
-      cy.getCoverage().its('getSavedCartItems.functions.pct').should('be.gte', 100.00);
-      cy.getCoverage().its('getSavedCartItems.lines.pct').should('be.gte', 100.00);
+      cy.getCoverage().its('total.functions.pct').should('be.gte', 100.0);
+      cy.getCoverage()
+        .its('getSavedCartItems.functions.pct')
+        .should('be.gte', 100.0);
+      cy.getCoverage()
+        .its('getSavedCartItems.lines.pct')
+        .should('be.gte', 100.0);
     });
   });
 
@@ -134,16 +133,22 @@ describe('Shopping Cart Project', () => {
       cy.get(CART_ITEMS)
         .children()
         .first()
-        .should('have.text', `ID: ${results[first].id} | TITLE: ${results[first].title} | PRICE: $${results[first].price}`)
-       
+        .should(
+          'have.text',
+          `ID: ${results[first].id} | TITLE: ${results[first].title} | PRICE: $${results[first].price}`
+        );
+
       addToCart(last);
       cy.wait(1000);
 
       cy.get(CART_ITEMS)
         .children()
         .last()
-        .should('have.text', `ID: ${results[last].id} | TITLE: ${results[last].title} | PRICE: $${results[last].price}`)
-  
+        .should(
+          'have.text',
+          `ID: ${results[last].id} | TITLE: ${results[last].title} | PRICE: $${results[last].price}`
+        );
+
       cy.reload({
         onBeforeLoad(win) {
           win.fetch = fetchMock;
@@ -153,12 +158,18 @@ describe('Shopping Cart Project', () => {
       cy.get(CART_ITEMS)
         .children()
         .first()
-        .should('have.text', `ID: ${results[first].id} | TITLE: ${results[first].title} | PRICE: $${results[first].price}`)
+        .should(
+          'have.text',
+          `ID: ${results[first].id} | TITLE: ${results[first].title} | PRICE: $${results[first].price}`
+        );
 
       cy.get(CART_ITEMS)
         .children()
         .last()
-        .should('have.text', `ID: ${results[last].id} | TITLE: ${results[last].title} | PRICE: $${results[last].price}`)
+        .should(
+          'have.text',
+          `ID: ${results[last].id} | TITLE: ${results[last].title} | PRICE: $${results[last].price}`
+        );
     });
 
     it('Deverá ser possível remover items do carrinho ao clicar sobre eles mesmo após recarregar a página', () => {
@@ -172,24 +183,15 @@ describe('Shopping Cart Project', () => {
         },
       });
 
-      cy.get(CART_ITEMS)
-        .children()
-        .eq(1)
-        .click()
+      cy.get(CART_ITEMS).children().eq(1).click();
       countCart(2);
 
-      cy.get(CART_ITEMS)
-        .children()
-        .eq(1)
-        .click()
+      cy.get(CART_ITEMS).children().eq(1).click();
       countCart(1);
 
-      cy.get(CART_ITEMS)
-        .children()
-        .eq(0)
-        .click()
+      cy.get(CART_ITEMS).children().eq(0).click();
       countCart(0);
-    })
+    });
   });
 
   describe('9 - Calcule o valor total dos itens do carrinho de compras de forma assíncrona', () => {
@@ -202,10 +204,7 @@ describe('Shopping Cart Project', () => {
       checkPrice(results, [5, 42, 36]);
       addToCart(15);
       checkPrice(results, [5, 42, 36, 15]);
-      cy.get(CART_ITEMS)
-        .children()
-        .eq(1)
-        .click()
+      cy.get(CART_ITEMS).children().eq(1).click();
       checkPrice(results, [5, 36, 15]);
     });
   });
@@ -216,8 +215,7 @@ describe('Shopping Cart Project', () => {
       addToCart(0);
       addToCart(1);
       countCart(3);
-      cy.get(EMPTY_CART_BUTTON)
-        .click()
+      cy.get(EMPTY_CART_BUTTON).click();
       countCart(0);
     });
   });
@@ -226,18 +224,16 @@ describe('Shopping Cart Project', () => {
     it('Adicionar um texto de "carregando" durante uma requisição à API', () => {
       cy.visit(PROJECT_URL, {
         onBeforeLoad(win) {
-          win.fetch = (url) => (new Promise(async (resolve) => {
-            const fetchResult = await fetchMock(url);
-            setTimeout(() => {
-              resolve(fetchResult);
-            }, 1000);
-          }));
+          win.fetch = (url) =>
+            new Promise(async (resolve) => {
+              const fetchResult = await fetchMock(url);
+              setTimeout(() => {
+                resolve(fetchResult);
+              }, 1000);
+            });
         },
       });
-      cy.get(LOADING)
-        .should('exist')
-        .wait(3000)
-        .should('not.exist');
+      cy.get(LOADING).should('exist').wait(3000).should('not.exist');
     });
   });
 });
