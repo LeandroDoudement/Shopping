@@ -73,7 +73,7 @@ const createCartItemElement = ({ id, title, price }) => {
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
   li.addEventListener('click', () => {
     cartItemClickListener(li);
-    const parsedIds = getSavedCartItems('cartItems');
+    const parsedIds = getSavedCartItems('cartItem');
     if (!!parsedIds && Array.isArray(parsedIds)) {
       const index = parsedIds.indexOf(id);
       parsedIds.splice(index, 1);
@@ -84,7 +84,7 @@ const createCartItemElement = ({ id, title, price }) => {
 };
 
 const addtoLocalStorage = (id) => {
-  const parsedIds = getSavedCartItems('cartItems');
+  const parsedIds = getSavedCartItems('cartItem');
   if (!!ids && Array.isArray(parsedIds)) {
     parsedIds.push(id);
     saveCartItems(parsedIds);
@@ -137,7 +137,7 @@ const addProducts = async () => {
 };
 
 const LoadCartItens = () => {
-  const ids = getSavedCartItems('cartItems');
+  const ids = getSavedCartItems('cartItem');
   (ids || []).forEach((element) => {
     onClick(element, true);
   });
@@ -149,7 +149,7 @@ const esvaziarCarrinho = () => {
   botaoEsvaziarCarrinho.addEventListener('click', () => {
     const carrinho = document.querySelector('.cart__items');
     carrinho.innerHTML = '';
-    localStorage.removeItem('cartItems');
+    localStorage.removeItem('cartItem');
   });
 };
 
