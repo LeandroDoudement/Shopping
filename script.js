@@ -43,21 +43,21 @@ const cartItemClickListener = (li) => {
  * @returns {Element} Elemento de um item do carrinho.
  */
 
-const sumOfItens = () => {
-  const totalPrice = document.querySelector('.total-price');
-  const price = totalPrice.innerHTML;
-  totalPrice.innerText = `Subtotal: R$${
-    Math.round(
-      (parseFloat(price.match(/[+-]?\d+(\.\d+)?/g)[0]) + values) * 100
-    ) / 100
-  }`;
-  saveItems(
-    'totalPrice',
-    JSON.stringify(
-      parseFloat(totalPrice.innerHTML.match(/[+-]?\d+(\.\d+)?/g)[0])
-    )
-  );
-};
+// const sumOfItens = () => {
+//   const totalPrice = document.querySelector('.total-price');
+//   const price = totalPrice.innerHTML;
+//   totalPrice.innerText = `Subtotal: R$${
+//     Math.round(
+//       (parseFloat(price.match(/[+-]?\d+(\.\d+)?/g)[0]) + values) * 100,
+//     ) / 100
+//   }`;
+//   saveItems(
+//     'totalPrice',
+//     JSON.stringify(
+//       parseFloat(totalPrice.innerHTML.match(/[+-]?\d+(\.\d+)?/g)[0]),
+//     ),
+//   );
+// };
 
 const loadingItems = () => {
   const items = document.querySelector('.items');
@@ -120,8 +120,7 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(
     createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', () =>
-      onClick(id)
-    )
+      onClick(id)),
   );
 
   return section;
