@@ -1,12 +1,20 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
+let cartPrice = 0;
+
 const localStorageGetItem = () => {
   const item = getSavedCartItems('cartItems');
   //   if (typeof item === 'string') {
   //     return item;
   //   }
   return JSON.parse(item);
+};
+
+const calculatePrice = (value) => {
+  cartPrice += value;
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerHTML = `Subtotal: R$${cartPrice.toFixed(2)}`;
 };
 
 const localStorageSetItem = (items) => {
@@ -43,8 +51,9 @@ const createCustomElement = (element, className, innerText, onClick) => {
   }
   return e;
 };
-const cartItemClickListener = (li) => {
+const removeItemFromCart = (li, price) => {
   li.parentNode.removeChild(li);
+  calculatePrice(-price);
 };
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -54,22 +63,6 @@ const cartItemClickListener = (li) => {
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
-
-// const sumOfItens = () => {
-//   const totalPrice = document.querySelector('.total-price');
-//   const price = totalPrice.innerHTML;
-//   totalPrice.innerText = `Subtotal: R$${
-//     Math.round(
-//       (parseFloat(price.match(/[+-]?\d+(\.\d+)?/g)[0]) + values) * 100,
-//     ) / 100
-//   }`;
-//   saveItems(
-//     'totalPrice',
-//     JSON.stringify(
-//       parseFloat(totalPrice.innerHTML.match(/[+-]?\d+(\.\d+)?/g)[0]),
-//     ),
-//   );
-// };
 
 const loadingItems = () => {
   const items = document.querySelector('.items');
@@ -84,7 +77,7 @@ const createCartItemElement = ({ id, title, price }) => {
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
   li.addEventListener('click', () => {
-    cartItemClickListener(li);
+    removeItemFromCart(li, price);
     const parsedIds = localStorageGetItem();
     if (!!parsedIds && Array.isArray(parsedIds)) {
       const index = parsedIds.findIndex((elem) => elem.id === id);
@@ -105,13 +98,14 @@ const addtoLocalStorage = (id) => {
   }
 };
 
-const onClick = async (id, preventSavingInLocalStorage) => {
+const addItemToCart = async (item, preventSavingInLocalStorage) => {
   const cartItems = document.querySelector(classCartItem);
   // const productData = await fetchItem(id);
-  const productInformation = createCartItemElement(id);
+  const productInformation = createCartItemElement(item);
   cartItems.appendChild(productInformation);
+  calculatePrice(item.price);
   if (!preventSavingInLocalStorage) {
-    addtoLocalStorage(id);
+    addtoLocalStorage(item);
   }
 };
 
@@ -139,7 +133,7 @@ const createProductItemElement = ({ id, title, thumbnail, price }) => {
   );
   section.appendChild(
     createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', () =>
-      onClick({ id, title, price })),
+      addItemToCart({ id, title, price })),
   );
 
   return section;
@@ -156,9 +150,9 @@ const addProducts = async () => {
 };
 
 const LoadCartItens = () => {
-  const ids = localStorageGetItem();
-  (ids || []).forEach((element) => {
-    onClick(element, true);
+  const elements = localStorageGetItem();
+  (elements || []).forEach((element) => {
+    addItemToCart(element, true);
   });
 };
 
