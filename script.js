@@ -1,6 +1,4 @@
-// Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
-// experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
-// Fique a vontade para modificar o código já escrito e criar suas próprias funções!
+/* eslint-disable max-lines-per-function */
 let cartPrice = 0;
 
 const localStorageGetItem = () => {
@@ -72,11 +70,29 @@ const loadingItems = () => {
   items.appendChild(section);
 };
 
-const createCartItemElement = ({ id, title, price }) => {
+const createCartItemElement = ({ id, title, price, thumbnail }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', () => {
+  const productThumbnail = document.createElement('img');
+  productThumbnail.className = 'product__thumbnail';
+  productThumbnail.src = thumbnail;
+  li.appendChild(productThumbnail);
+  const textContainer = document.createElement('div');
+  textContainer.className = 'text__container';
+  li.appendChild(textContainer);
+  const productText = document.createElement('span');
+  productText.className = 'product__text';
+  const texto = `${`${title}, ${id}`.substring(0, 100)}...`;
+  productText.innerHTML = texto;
+  textContainer.appendChild(productText);
+  const productValue = document.createElement('span');
+  productValue.className = 'product__value';
+  productValue.innerHTML = `Valor: R$${price}`;
+  textContainer.appendChild(productValue);
+  const icon = document.createElement('i');
+  icon.className = 'fa-solid fa-x';
+  li.appendChild(icon);
+  icon.addEventListener('click', () => {
     removeItemFromCart(li, price);
     const parsedIds = localStorageGetItem();
     if (!!parsedIds && Array.isArray(parsedIds)) {
@@ -100,7 +116,6 @@ const addtoLocalStorage = (id) => {
 
 const addItemToCart = async (item, preventSavingInLocalStorage) => {
   const cartItems = document.querySelector(classCartItem);
-  // const productData = await fetchItem(id);
   const productInformation = createCartItemElement(item);
   cartItems.appendChild(productInformation);
   calculatePrice(item.price);
@@ -122,18 +137,18 @@ const createProductItemElement = ({ id, title, thumbnail, price }) => {
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item_id', id));
-  section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
+  section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(
     createCustomElement(
       'p',
       'item_price',
-      `Valor: ${(Math.round(price * 100) / 100).toFixed(2)}`,
+      `R$ ${(Math.round(price * 100) / 100).toFixed(2)}`,
     ),
   );
   section.appendChild(
     createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', () =>
-      addItemToCart({ id, title, price })),
+      addItemToCart({ id, title, price, thumbnail })),
   );
 
   return section;
